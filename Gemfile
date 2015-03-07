@@ -32,6 +32,7 @@ gem "american_date"
 gem 'therubyracer'
 gem 'actionview-encoded_mail_to'
 gem 'annotate'
+gem 'rails_12factor', group: :production
 
 
 # Use ActiveModel has_secure_password
@@ -54,3 +55,5 @@ group :development, :test do
   gem 'spring'
 end
 
+
+ruby "2.0.0"
