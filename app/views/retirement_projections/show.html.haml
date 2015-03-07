@@ -48,11 +48,6 @@
     %td Expenses
     %td Savings
   - (current_year..planned_retirement_year).each do |year|
-    - current_annual_expenditures = current_annual_expenditures + (current_annual_expenditures * expected_percentage_increase_in_expenditures)
-    - current_annual_income = current_annual_income + (current_annual_income * @rp.expected_percentage_increase_in_income_yearly)
-    - current_savings = current_savings + current_annual_income - current_annual_expenditures
-    - current_savings = current_savings + (current_savings * @rp.expected_average_rate_of_return_on_savings)
-    - expected_present_day_expenses_when_retired = expected_present_day_expenses_when_retired + (expected_present_day_expenses_when_retired * @rp.expected_inflation_rate)
     %tr
       %td= year - @rp.year_of_birth
       %td= year
@@ -60,6 +55,13 @@
       %td= to_currency current_annual_expenditures
       %td{:class => current_savings < 0 ? "danger" : "success"}
         = to_currency current_savings
+
+    - current_annual_expenditures = current_annual_expenditures + (current_annual_expenditures * expected_percentage_increase_in_expenditures)
+    - current_annual_income = current_annual_income + (current_annual_income * @rp.expected_percentage_increase_in_income_yearly)
+    - current_savings = current_savings + current_annual_income - current_annual_expenditures
+    - current_savings = current_savings + (current_savings * @rp.expected_average_rate_of_return_on_savings)
+    - expected_present_day_expenses_when_retired = expected_present_day_expenses_when_retired + (expected_present_day_expenses_when_retired * @rp.expected_inflation_rate)
+
   %tr
     %td{:colspan => 5}
       RETIRED - Your percentage of investment growth will now use your expected growth once retired.  That number should typically be smaller because you would most likey move your funds to less risky investments such as bonds.
