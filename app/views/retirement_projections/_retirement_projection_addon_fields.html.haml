@@ -1,0 +1,8 @@
+.nested-fields
+  = f.input :description
+  = f.input :year
+  = f.input :how_many_years
+  = f.input :income_or_expense, collection: RetirementProjectionAddon::TYPES , as: :radio_buttons, required: true, checked: RetirementProjectionAddon::TYPES[0]
+  = f.input :amount
+  = link_to_remove_association "x", f, class: "btn btn-danger"
+%hr

@@ -34,6 +34,24 @@ class RetirementProjectionsController < ApplicationController
     @rp = RetirementProjection.find(params[:id])
   end
 
+  def edit
+    @retirement_projection = RetirementProjection.find(params[:id])
+  end
+
+
+  def update
+    @retirement_projection = RetirementProjection.find(params[:id])
+    respond_to do |format|
+      if @retirement_projection.update_attributes(retirement_projection_params)
+        format.html { redirect_to @retirement_projection, notice: 'Retirement calculation was updated' }
+        format.json { render json: @retirement_projection, status: :created, location: @retirement_projection }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @retirement_projection.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
   def retirement_projection_params
     params.require(:retirement_projection).permit!

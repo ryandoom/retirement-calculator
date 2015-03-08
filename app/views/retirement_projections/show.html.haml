@@ -5,7 +5,7 @@
     %h3.panel-title Disclaimer
   .panel-body
     This retirement calculator was created for fun and is not guaranteed to be accurate. I am not a mathematician, financial advisor, lawyer, or fortune teller.  Use this at your own risk.
-    = link_to "send me feedback", "https://docs.google.com/forms/d/1RXSdOibwXhdUEeMCU9JEpQnJ9rXUIDYC6zFMutOok98/viewform?usp=send_form", target: "_blank"
+    = link_to "Send me feedback", "https://docs.google.com/forms/d/1RXSdOibwXhdUEeMCU9JEpQnJ9rXUIDYC6zFMutOok98/viewform?usp=send_form", target: "_blank"
 
 - current_year = DateTime.now.year
 - expected_year_of_death = @rp.year_of_birth + @rp.age_at_death
@@ -39,6 +39,8 @@
 - expected_percentage_increase_in_expenditures = @rp.expected_percentage_increase_in_expenditures
 - current_annual_income = @rp.current_annual_income
 - current_savings = @rp.current_savings
+.pull-right
+  = link_to "Edit Retirement Calculations", edit_retirement_projection_path(@rp)
 - expected_present_day_expenses_when_retired = @rp.expected_present_day_expenses_when_retired
 %table.table.table-bordered.table-striped
   %tr
@@ -55,6 +57,16 @@
       %td= to_currency current_annual_expenditures
       %td{:class => current_savings < 0 ? "danger" : "success"}
         = to_currency current_savings
+    - @rp.retirement_projection_addons.each do |rpa|
+      - if ((year >= rpa.year) && (year < (rpa.year + rpa.how_many_years)) )
+        %tr
+          %td
+          %td
+          %td= to_currency rpa.amount if rpa.income?
+          %td= to_currency rpa.amount if rpa.expense?
+          %td.warning= rpa.description
+        - current_savings = current_savings + (rpa.income? ? rpa.amount : rpa.amount * -1)
+
 
     - current_annual_expenditures = current_annual_expenditures + (current_annual_expenditures * expected_percentage_increase_in_expenditures)
     - current_annual_income = current_annual_income + (current_annual_income * @rp.expected_percentage_increase_in_income_yearly)
@@ -69,9 +81,7 @@
       = "Changing interest from: #{to_percentage @rp.expected_average_rate_of_return_on_savings} to #{to_percentage @rp.expected_average_rate_of_return_on_savings_retired}"
 
   - (planned_retirement_year+1..expected_year_of_death).each do |year|
-    - expected_present_day_expenses_when_retired = expected_present_day_expenses_when_retired + (expected_present_day_expenses_when_retired * @rp.expected_inflation_rate)
-    - current_savings = current_savings + @rp.expected_income_once_retired - expected_present_day_expenses_when_retired
-    - current_savings = current_savings + (current_savings * @rp.expected_average_rate_of_return_on_savings_retired)
+
     %tr
       %td= year - @rp.year_of_birth
       %td= year
@@ -79,3 +89,17 @@
       %td= to_currency expected_present_day_expenses_when_retired
       %td{:class => current_savings < 0 ? "danger" : "success"}
         = to_currency current_savings
+
+    - @rp.retirement_projection_addons.each do |rpa|
+      - if ((year >= rpa.year) && (year < (rpa.year + rpa.how_many_years)) )
+        %tr
+          %td
+          %td
+          %td= to_currency rpa.amount if rpa.income?
+          %td= to_currency rpa.amount if rpa.expense?
+          %td.warning= rpa.description
+        - current_savings = current_savings + (rpa.income? ? rpa.amount : rpa.amount * -1)
+
+    - expected_present_day_expenses_when_retired = expected_present_day_expenses_when_retired + (expected_present_day_expenses_when_retired * @rp.expected_inflation_rate)
+    - current_savings = current_savings + @rp.expected_income_once_retired - expected_present_day_expenses_when_retired
+    - current_savings = current_savings + (current_savings * @rp.expected_average_rate_of_return_on_savings_retired)

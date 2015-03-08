@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150307193411) do
+ActiveRecord::Schema.define(version: 20150308031340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "retirement_projection_addons", force: :cascade do |t|
+    t.integer  "retirement_projection_id"
+    t.string   "description"
+    t.integer  "year"
+    t.integer  "how_many_years"
+    t.integer  "amount"
+    t.string   "income_or_expense"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "retirement_projections", force: :cascade do |t|
     t.integer  "year_of_birth"
